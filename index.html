@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>20/10 Yêu Thương - Gửi Phái Đẹp Lớp 10T1 | Tổ 2 Đẳng Cấp</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💐</text></svg>">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400;1,600&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Floating Petals Canvas -->
+  <canvas id="petals-canvas"></canvas>
+
+  <!-- YouTube Hidden Audio Player -->
+  <div id="youtube-player-container" style="position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none;">
+    <div id="yt-player"></div>
+  </div>
+
+  <!-- Music Floating Controller -->
+  <div class="music-pill" id="musicPill" title="Bật / Tắt Nhạc Xổ Số & 20/10">
+    <div class="music-wave" id="musicWave">
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <span class="music-text" id="musicStatusText">Nhạc Xổ Số: Đang Tắt</span>
+    <button class="music-btn" id="toggleMusicBtn">
+      <i class="fa-solid fa-play" id="musicIcon"></i>
+    </button>
+  </div>
+
+  <!-- Top Floating Admin Link -->
+  <button class="admin-portal-pill" id="openAdminModalBtn" title="Khu vực kiểm tra quà (Dành cho Ban Tổ Chức)">
+    <i class="fa-solid fa-shield-halved"></i>
+    <span>Kiểm Tra Quà (Admin)</span>
+  </button>
+
+  <!-- ==================== GIAO DIỆN 1: BỨC THƯ TO ĐÙNG (HERO ENVELOPE) ==================== -->
+  <div class="envelope-screen" id="envelopeScreen">
+    <div class="envelope-header">
+      <div class="sparkle-badge">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> 20 Tháng 10 - Ngày Phụ Nữ Việt Nam
+      </div>
+      <h1 class="envelope-main-title">Món Quà Bí Mật Dành Cho Nữ Sinh 10T1</h1>
+      <p class="envelope-subtitle">Gửi gắm từ tất cả các chàng trai Tổ 2 & Nam sinh 10T1 đẳng cấp</p>
+    </div>
+
+    <!-- The 3D Interactive Envelope -->
+    <div class="envelope-wrapper" id="envelopeWrapper">
+      <div class="envelope-card">
+        <!-- Envelope Flap (Nắp phong bì) -->
+        <div class="envelope-flap" id="envelopeFlap"></div>
+        
+        <!-- Pocket Base (Túi đựng) -->
+        <div class="envelope-pocket"></div>
+        
+        <!-- Wax Seal (Con dấu sáp tròn) -->
+        <div class="wax-seal" id="waxSeal" title="Nhấn vào đây để mở thư!">
+          <div class="seal-inner">
+            <span class="seal-text">10T1</span>
+            <span class="seal-sub">20/10</span>
+          </div>
+          <div class="pulse-ring"></div>
+        </div>
+
+        <!-- The Letter Inside (Trồi lên khi mở) -->
+        <div class="envelope-letter" id="envelopeLetter">
+          <div class="letter-stamp">
+            <i class="fa-solid fa-heart"></i>
+          </div>
+          <h3 class="letter-intro-heading">Gửi Các Bạn Nữ 10T1 Xinh Đẹp ✨</h3>
+          <p class="letter-intro-snippet">
+            Nhân ngày 20/10, chúc phái đẹp của lớp mình luôn luôn rạng rỡ, nụ cười luôn nở trên môi, bài kiểm tra luôn 9, 10...
+          </p>
+          <div class="letter-open-prompt">
+            <i class="fa-solid fa-envelope-open-text"></i> Đang mở thư & bật nhạc xổ số...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="envelope-click-guide">
+      <button class="btn-open-envelope" id="btnOpenEnvelopeAction">
+        <i class="fa-solid fa-gift pulse-icon"></i>
+        <span>CHẠM ĐỂ MỞ BỨC THƯ & BẬT NHẠC XỔ SỐ</span>
+      </button>
+      <p class="guide-note"><i class="fa-solid fa-circle-info"></i> Hãy nhớ bật âm lượng để nghe điệu nhạc xổ số huyền thoại nhé!</p>
+    </div>
+  </div>
+
+  <!-- ==================== GIAO DIỆN 2: NỘI DUNG CHÍNH (MAIN EXPERIENCE) ==================== -->
+  <main class="main-content" id="mainContent">
+
+    <!-- Navigation Bar -->
+    <nav class="glass-navbar">
+      <div class="nav-brand">
+        <span class="nav-class-badge">LỚP 10T1</span>
+        <span class="nav-team-badge">TỔ 2 ĐẲNG CẤP</span>
+      </div>
+      <div class="nav-menu">
+        <a href="#letterSection" class="nav-link"><i class="fa-solid fa-envelope-open-heart"></i> Bức Thư</a>
+        <a href="#lotterySection" class="nav-link highlight"><i class="fa-solid fa-clover"></i> Xổ Số 20/10</a>
+        <a href="#wishesSection" class="nav-link"><i class="fa-solid fa-star"></i> Lời Chúc</a>
+        <a href="#rulesSection" class="nav-link"><i class="fa-solid fa-candy-cane"></i> Thể Lệ Quà</a>
+      </div>
+    </nav>
+
+    <!-- SECTION 1: BỨC THƯ ĐẦY ĐỦ VÀ Ý NGHĨA -->
+    <section class="letter-full-section" id="letterSection">
+      <div class="section-container">
+        <div class="decorative-ribbon">
+          <span>💐 BỨC THƯ TÌNH CẢM TỔ 2 GỬI TẶNG 10T1 💐</span>
+        </div>
+
+        <div class="royal-letter-paper">
+          <div class="letter-corner top-left"></div>
+          <div class="letter-corner top-right"></div>
+          <div class="letter-corner bottom-left"></div>
+          <div class="letter-corner bottom-right"></div>
+
+          <div class="letter-header">
+            <span class="letter-date">Phòng học 10T1 — Ngày 20 Tháng 10</span>
+            <h2 class="letter-title">Thân Gửi Tất Cả Các Bạn Nữ Lớp 10T1 Thân Yêu! 🌹</h2>
+          </div>
+
+          <div class="letter-body">
+            <p>
+              Lời đầu tiên, toàn thể các bạn nam của <strong>Tổ 2</strong> cũng như tất cả các bạn nam sinh lớp <strong>10T1</strong> xin được gửi lời chúc mừng chân thành, ngọt ngào và ấm áp nhất tới toàn thể các cô gái tuyệt vời của lớp mình nhân ngày <strong>Phụ nữ Việt Nam 20/10</strong>!
+            </p>
+            <p>
+              Bước vào năm học lớp 10, một chặng đường thanh xuân mới dưới mái trường cấp 3, thật may mắn và tự hào khi 10T1 chúng ta có những bạn nữ vừa xinh xắn, vừa duyên dáng, lại vô cùng tài năng và học giỏi. Dù đôi khi chúng tớ có chút ồn ào hay trêu đùa, nhưng các bạn vẫn luôn bao dung, là nguồn năng lượng tích cực giúp lớp mình luôn tràn ngập tiếng cười!
+            </p>
+            <blockquote class="special-quote">
+              <i class="fa-solid fa-quote-left quote-icon"></i>
+              "Chúc các cô gái 10T1: Xinh đẹp như hoa sớm mai, thông minh rạng rỡ, điểm thi luôn chót vót và mỗi ngày đến trường đều là một ngày hạnh phúc nhất!"
+            </blockquote>
+            <p>
+              Để ngày 20/10 thêm phần bùng nổ và khó quên, chúng tớ đã đặc biệt chuẩn bị chương trình <strong>"XỔ SỐ KIẾN THIẾT 10T1"</strong> cùng những phần quà ngọt ngào nhất: <strong>kẹo mút</strong> và <strong>kẹo ngọt</strong>! Kèm theo điệu nhạc xổ số quốc dân quen thuộc, mời các bạn nữ hãy thử ngay vận may của mình ở phần dưới nhé!
+            </p>
+          </div>
+
+          <div class="letter-signature">
+            <p class="signature-title">Thay mặt tập thể nam sinh & Tổ 2,</p>
+            <p class="signature-name">Thái Thanh Sơn & Các Chàng Trai 10T1 Đẳng Cấp ✍️</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: VÒNG QUAY XỔ SỐ KIẾN THIẾT 10T1 (GAME CHÍNH) -->
+    <section class="lottery-section" id="lotterySection">
+      <div class="section-container">
+        
+        <div class="lottery-banner">
+          <div class="lottery-badge">
+            <i class="fa-solid fa-fire"></i> ĐẶC BIỆT 20/10 — CHƠI 1 LẦN DUY NHẤT
+          </div>
+          <h2 class="section-title">
+            <span class="gold-gradient">XỔ SỐ KIẾN THIẾT 10T1</span>
+          </h2>
+          <p class="section-desc">
+            Âm vang điệu nhạc xổ số huyền thoại! Mỗi bạn nữ chỉ có đúng <strong>1 lượt quay duy nhất</strong> trên thiết bị. Trúng quà là có mã số nhận kẹo ngay từ Ban Tổ Chức!
+          </p>
+        </div>
+
+        <!-- Remaining Stock Preview -->
+        <div class="stock-showcase">
+          <div class="stock-item">
+            <div class="stock-icon lollipop-spin">🍭</div>
+            <div class="stock-info">
+              <span class="stock-num" id="displayLollipopStock">3</span>
+              <span class="stock-label">Cây Kẹo Mút</span>
+            </div>
+          </div>
+          <div class="stock-divider"></div>
+          <div class="stock-item">
+            <div class="stock-icon candy-bounce">🍬</div>
+            <div class="stock-info">
+              <span class="stock-num" id="displayCandyStock">5</span>
+              <span class="stock-label">Cục Kẹo Ngọt</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN GAME CONTAINER -->
+        <div class="game-dashboard" id="gameDashboard">
+
+          <!-- STATE A: READY TO PLAY (Chưa quay) -->
+          <div class="game-play-area" id="gamePlayArea">
+            
+            <!-- Student Name Input (để lưu vào hệ thống) -->
+            <div class="player-input-card">
+              <label for="studentNameInput" class="input-label">
+                <i class="fa-solid fa-heart-circle-check"></i> Hãy nhập Họ và Tên bạn nữ 10T1 trước khi quay:
+              </label>
+              <div class="input-group">
+                <input type="text" id="studentNameInput" placeholder="Ví dụ: Nguyễn Phương Linh..." maxlength="40" autocomplete="off">
+                <button type="button" class="btn-clear-input" id="btnClearName" title="Xoá"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+              <p class="input-hint"><i class="fa-solid fa-shield-cat"></i> Hệ thống tự động khoá sau khi quay để đảm bảo mỗi bạn đều nhận quà công bằng!</p>
+            </div>
+
+            <!-- The Wheel Area -->
+            <div class="wheel-stage">
+              <div class="wheel-outer-lights" id="wheelLights">
+                <!-- Lights rendered via JS/CSS -->
+              </div>
+              
+              <!-- Pointer (Kim chỉ giải thưởng) -->
+              <div class="wheel-pointer">
+                <div class="pointer-needle"></div>
+              </div>
+
+              <!-- Canvas Wheel -->
+              <canvas id="wheelCanvas" width="450" height="450"></canvas>
+
+              <!-- Center Spin Button -->
+              <button class="wheel-center-btn" id="btnSpinWheel" title="Nhấn để bắt đầu quay xổ số!">
+                <div class="center-btn-inner">
+                  <i class="fa-solid fa-play"></i>
+                  <span>QUAY</span>
+                </div>
+              </button>
+            </div>
+
+            <div class="spin-controls">
+              <button class="btn-spin-action" id="btnSpinAction">
+                <i class="fa-solid fa-dice-d20"></i> BẬT NHẠC VÀ QUAY NGAY!
+              </button>
+            </div>
+          </div>
+
+          <!-- STATE B: ALREADY PLAYED (Đã quay xong - Hiển thị Phiếu Nhận Thưởng) -->
+          <div class="ticket-result-area" id="ticketResultArea" style="display: none;">
+            <div class="ticket-card" id="ticketCard">
+              <div class="ticket-ribbon">PHIẾU TRÚNG THƯỞNG 20/10</div>
+              
+              <div class="ticket-header">
+                <div class="ticket-logo">
+                  <i class="fa-solid fa-award"></i>
+                  <span>LỚP 10T1 — TỔ 2 ĐẲNG CẤP</span>
+                </div>
+                <div class="ticket-status-badge" id="ticketStatusBadge">
+                  <i class="fa-solid fa-check"></i> ĐÃ XÁC THỰC LƯỢT CHƠI
+                </div>
+              </div>
+
+              <div class="ticket-body">
+                <div class="ticket-row">
+                  <span class="label">Người may mắn:</span>
+                  <span class="value student-name" id="ticketStudentName">Nguyễn Phương Linh</span>
+                </div>
+                
+                <div class="ticket-prize-banner">
+                  <span class="prize-tag">PHẦN THƯỞNG NHẬN ĐƯỢC:</span>
+                  <h3 class="prize-name" id="ticketPrizeName">🍭 2 Cây Kẹo Mút Siêu Ngọt Ngào</h3>
+                  <p class="prize-desc" id="ticketPrizeDesc">Chúc mừng bạn đã xuất sắc nhận được giải thưởng ngọt ngào nhất 20/10!</p>
+                </div>
+
+                <div class="ticket-code-box">
+                  <span class="code-title">MÃ KIỂM TRA ĐỔI QUÀ (BẢO MẬT):</span>
+                  <div class="code-display" id="ticketVerifyCode">10T1-KEO2-8942</div>
+                  <small>Đưa màn hình này hoặc đọc mã trên cho bạn Sơn (Tổ 2) để nhận quà nhé!</small>
+                </div>
+
+                <div class="ticket-meta">
+                  <span><i class="fa-solid fa-clock"></i> Thời gian: <strong id="ticketPlayTime">--:-- 20/10/2026</strong></span>
+                  <span><i class="fa-solid fa-mobile-screen"></i> Thiết bị: <strong id="ticketDeviceShortId">#DEVICE-XXXX</strong></span>
+                </div>
+              </div>
+
+              <div class="ticket-footer">
+                <div class="alert-played-once">
+                  <i class="fa-solid fa-circle-exclamation"></i>
+                  <span>Thiết bị này đã hoàn thành lượt quay! Mỗi bạn nữ nhận 1 phần quà để chia sẻ trọn vẹn niềm vui cùng 10T1.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Alternative Game Card (Hộp Quà May Mắn) -->
+        <div class="alt-game-card">
+          <div class="alt-header">
+            <i class="fa-solid fa-box-open"></i>
+            <h3>Gợi Ý Thêm: Góc Quà Bất Ngờ</h3>
+          </div>
+          <p class="alt-desc">
+            Tất cả các bạn nữ sau khi quay đều được các bạn nam Tổ 2 phục vụ tận nơi, kèm theo những lời chúc ngọt ngào nhất từ đáy lòng!
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 3: THỂ LỆ & DANH SÁCH GIẢI THƯỞNG -->
+    <section class="rules-section" id="rulesSection">
+      <div class="section-container">
+        <h2 class="section-title">
+          <span class="gold-gradient">Cơ Cấu Giải Thưởng Ngọt Ngào</span>
+        </h2>
+        <p class="section-desc">
+          Chuẩn bị tận tâm từ các bạn nam Tổ 2 dành tặng các bạn nữ 10T1
+        </p>
+
+        <div class="prizes-grid">
+          
+          <div class="prize-card special-card">
+            <div class="prize-badge-rank">GIẢI ĐẶC BIỆT</div>
+            <div class="prize-emoji">🍭🍭</div>
+            <h4 class="prize-title">2 Cây Kẹo Mút</h4>
+            <p class="prize-desc">Dành cho cô gái có nhân phẩm tối thượng của 10T1 ngày hôm nay!</p>
+            <div class="prize-stock-tag">Số lượng: 1 suất</div>
+          </div>
+
+          <div class="prize-card">
+            <div class="prize-badge-rank rank-1">GIẢI NHẤT</div>
+            <div class="prize-emoji">🍭</div>
+            <h4 class="prize-title">1 Cây Kẹo Mút</h4>
+            <p class="prize-desc">Kẹo mút tròn vị ngọt lịm, ngậm là xinh gái nhân đôi!</p>
+            <div class="prize-stock-tag">Số lượng: 1 suất</div>
+          </div>
+
+          <div class="prize-card">
+            <div class="prize-badge-rank rank-2">GIẢI NHÌ</div>
+            <div class="prize-emoji">🍬🍬</div>
+            <h4 class="prize-title">2 Cục Kẹo Thơm</h4>
+            <p class="prize-desc">Nhân đôi vị ngọt, tràn ngập may mắn và năng lượng học tập!</p>
+            <div class="prize-stock-tag">Số lượng: 2 suất</div>
+          </div>
+
+          <div class="prize-card">
+            <div class="prize-badge-rank rank-3">GIẢI BA</div>
+            <div class="prize-emoji">🍬</div>
+            <h4 class="prize-title">1 Cục Kẹo Ngọt</h4>
+            <p class="prize-desc">Món quà nhỏ xinh gửi gắm trọn vẹn tình cảm của Tổ 2!</p>
+            <div class="prize-stock-tag">Số lượng: 1 suất</div>
+          </div>
+
+        </div>
+
+        <div class="security-rules-box">
+          <div class="rules-icon"><i class="fa-solid fa-fingerprint"></i></div>
+          <div class="rules-text">
+            <h4>Quy Định Công Bằng 10T1:</h4>
+            <ul>
+              <li>Mỗi bạn chỉ được quay <strong>duy nhất 1 lần</strong> trên 1 điện thoại / máy tính.</li>
+              <li>Hệ thống lưu lại mã xác thực không thể chỉnh sửa bằng mắt thường.</li>
+              <li>Bạn Sơn và Ban Tổ Chức dùng cổng kiểm tra bảo mật (mật khẩu cấp riêng) để đối chiếu mã trước khi trao kẹo!</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 4: BỨC TƯỜNG LỜI CHÚC (WISH WALL) -->
+    <section class="wishes-section" id="wishesSection">
+      <div class="section-container">
+        <h2 class="section-title">
+          <span class="gold-gradient">Góc Lời Chúc 10T1</span>
+        </h2>
+        <p class="section-desc">Những thông điệp yêu thương từ nam sinh Tổ 2</p>
+
+        <div class="wishes-grid">
+          <div class="wish-item">
+            <div class="wish-heart"><i class="fa-solid fa-heart"></i></div>
+            <p class="wish-text">"Chúc các bạn nữ 10T1 luôn rạng rỡ như ánh nắng sân trường, cười tươi mỗi ngày và không bao giờ phải lo lắng về bài tập khó!"</p>
+            <span class="wish-author">— Tổ 2 thân ái gửi</span>
+          </div>
+
+          <div class="wish-item">
+            <div class="wish-heart"><i class="fa-solid fa-heart"></i></div>
+            <p class="wish-text">"20/10 chúc toàn thể phái đẹp 10T1 nhận được thật nhiều hoa, nhiều kẹo, và luôn luôn được cưng chiều như những nàng công chúa!"</p>
+            <span class="wish-author">— Ban Thể Thao & Đẹp Trai 10T1</span>
+          </div>
+
+          <div class="wish-item">
+            <div class="wish-heart"><i class="fa-solid fa-heart"></i></div>
+            <p class="wish-text">"Cảm ơn các bạn nữ vì đã luôn là mảnh ghép tuyệt vời nhất để tạo nên một tập thể 10T1 đoàn kết, vui vẻ và bất bại!"</p>
+            <span class="wish-author">— Thái Thanh Sơn & Brothers</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="footer-content">
+        <div class="footer-logo">💐 10T1 — TỔ 2 ĐẲNG CẤP 💐</div>
+        <p class="footer-text">Trang web chào mừng Ngày Phụ Nữ Việt Nam 20/10 dành riêng cho các bạn nữ 10T1.</p>
+        <p class="footer-copyright">Thiết kế bởi Sơn & Tổ 2 với tất cả sự trân trọng ❤️</p>
+        
+        <div class="footer-admin-trigger">
+          <button class="footer-admin-btn" id="footerAdminBtn">
+            <i class="fa-solid fa-key"></i> Kiểm Tra Quà Trúng Thưởng (Cần Mật Khẩu BTC)
+          </button>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- ==================== MODAL: ADMIN CHECK QUÀ (PASS: Son2801@) ==================== -->
+  <div class="admin-modal-backdrop" id="adminModalBackdrop">
+    <div class="admin-modal-card">
+      
+      <!-- Close Button -->
+      <button class="modal-close-btn" id="closeAdminModalBtn"><i class="fa-solid fa-xmark"></i></button>
+
+      <!-- VIEW 1: PASSWORD LOGIN -->
+      <div class="admin-view-login" id="adminViewLogin">
+        <div class="admin-shield-icon"><i class="fa-solid fa-lock"></i></div>
+        <h3 class="admin-modal-title">Cổng Kiểm Tra Quà 20/10</h3>
+        <p class="admin-modal-subtitle">Dành riêng cho Ban Tổ Chức (Thái Thanh Sơn) kiểm tra và đối chiếu mã nhận kẹo</p>
+
+        <form id="adminLoginForm" onsubmit="return false;">
+          <div class="admin-input-group">
+            <i class="fa-solid fa-key input-icon"></i>
+            <input type="password" id="adminPassInput" placeholder="Nhập mật khẩu kiểm tra..." autocomplete="current-password">
+            <button type="button" class="btn-toggle-eye" id="btnToggleEye">
+              <i class="fa-solid fa-eye" id="eyeIcon"></i>
+            </button>
+          </div>
+          <p class="login-error-msg" id="loginErrorMsg" style="display: none;">
+            <i class="fa-solid fa-triangle-exclamation"></i> Mật khẩu không chính xác! Vui lòng thử lại.
+          </p>
+          <button type="button" class="btn-admin-submit" id="btnAdminLogin">
+            <i class="fa-solid fa-right-to-bracket"></i> ĐĂNG NHẬP VÀO HỆ THỐNG
+          </button>
+        </form>
+      </div>
+
+      <!-- VIEW 2: ADMIN DASHBOARD (Sau khi nhập đúng pass: Son2801@) -->
+      <div class="admin-view-dashboard" id="adminViewDashboard" style="display: none;">
+        
+        <div class="dashboard-header">
+          <div class="dash-title-wrap">
+            <div class="badge-success"><i class="fa-solid fa-circle-check"></i> Đã Xác Thực BTC</div>
+            <h3>Bảng Điều Khiển Kiểm Tra Quà 10T1</h3>
+          </div>
+          <button class="btn-logout" id="btnAdminLogout" title="Đăng xuất"><i class="fa-solid fa-arrow-right-from-bracket"></i> Thoát</button>
+        </div>
+
+        <!-- Quick Code Verifier Bar -->
+        <div class="verify-quick-tool">
+          <label><i class="fa-solid fa-qrcode"></i> Tra cứu nhanh mã trúng thưởng:</label>
+          <div class="verify-input-row">
+            <input type="text" id="verifyCodeInput" placeholder="Nhập mã ví dụ: 10T1-KEO2-..." maxlength="30">
+            <button class="btn-verify-action" id="btnVerifyCode"><i class="fa-solid fa-magnifying-glass"></i> Kiểm Tra</button>
+          </div>
+          <div class="verify-result-toast" id="verifyResultToast" style="display: none;"></div>
+        </div>
+
+        <!-- Statistics Badges -->
+        <div class="dash-stats-row">
+          <div class="stat-box">
+            <span class="stat-title">Số Bạn Đã Quay</span>
+            <span class="stat-number" id="dashTotalPlayers">0</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-title">Kẹo Ngọt Đã Trúng</span>
+            <span class="stat-number" id="dashCandyWon">0 / 5</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-title">Kẹo Mút Đã Trúng</span>
+            <span class="stat-number" id="dashLollipopWon">0 / 3</span>
+          </div>
+        </div>
+
+        <!-- Claim Table -->
+        <div class="dash-table-wrap">
+          <h4 class="table-heading"><i class="fa-solid fa-list-check"></i> Danh Sách Nhận Quà (Sắp xếp mới nhất):</h4>
+          <div class="table-responsive">
+            <table class="claims-table" id="claimsTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Họ Tên</th>
+                  <th>Giải Thưởng</th>
+                  <th>Mã Xác Thực</th>
+                  <th>Thời Gian</th>
+                  <th>Trạng Thái</th>
+                  <th>Thao Tác</th>
+                </tr>
+              </thead>
+              <tbody id="claimsTableBody">
+                <!-- JS populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Management Tools -->
+        <div class="dash-actions">
+          <button class="btn-tool danger" id="btnResetCurrentDevice" title="Cho phép máy này quay lại để kiểm tra">
+            <i class="fa-solid fa-rotate-left"></i> Xóa Lượt Quay Của Máy Này
+          </button>
+          <button class="btn-tool warning" id="btnResetAllData" title="Xóa toàn bộ lịch sử (Cẩn trọng)">
+            <i class="fa-solid fa-trash-can"></i> Reset Toàn Bộ Dữ Liệu
+          </button>
+          <button class="btn-tool export" id="btnExportJSON">
+            <i class="fa-solid fa-file-arrow-down"></i> Xuất File Danh Sách
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/script.js"></script>
+</body>
+</html>

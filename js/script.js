@@ -3,6 +3,7 @@
  * 20/10 YÊU THƯƠNG - GỬI PHÁI ĐẸP LỚP 10T1 | TỔ 2 ĐẲNG CẤP
  * Core Interactivity, Lucky Wheel, Audio, Security & Admin Engine
  * Admin Password: Son2801@
+ * Cross-Device Cryptographic Verification Engine
  * ===================================================================
  */
 
@@ -15,18 +16,13 @@
   const STORAGE_KEY_TICKET = '10t1_2010_my_ticket_v1';
   const STORAGE_KEY_SUBMISSIONS = '10t1_2010_submissions_v1';
   const STORAGE_KEY_DEVICE = '10t1_2010_device_uuid_v1';
-  const STORAGE_KEY_STOCK = '10t1_2010_stock_v1';
+  const STORAGE_KEY_ADMIN_CLAIMS = '10t1_2010_admin_claims_v2';
 
-  // Default Initial Stock
-  const DEFAULT_STOCK = {
-    candies: 5,    // Cục kẹo
-    lollipops: 3   // Kẹo mút
-  };
-
-  // Wheel Sectors Definition (Bao gồm 3 ô May Mắn Lần Sau theo yêu cầu)
+  // 8 pure candy & lollipop sectors (Phần thưởng không giới hạn - Sơn bao tất cả!)
   const WHEEL_SECTORS = [
     {
-      id: 'lolli_2',
+      id: 'lolli_2_a',
+      prizeKey: 'MUT2',
       name: '2 Cây Kẹo Mút 🍭🍭',
       shortName: '2 KẸO MÚT',
       type: 'lollipop',
@@ -36,17 +32,8 @@
       textColor: '#ffffff'
     },
     {
-      id: 'luck_1',
-      name: 'May Mắn Lần Sau 🍀',
-      shortName: 'MAY MẮN 🍀',
-      type: 'luck',
-      amount: 0,
-      desc: 'Tuy chưa trúng kẹo nhưng nụ cười của bạn là món quà đẹp nhất! Nhận ngay 1 tràng pháo tay siêu to từ Tổ 2 nhé!',
-      color: '#8b5cf6',
-      textColor: '#ffffff'
-    },
-    {
       id: 'candy_1_a',
+      prizeKey: 'KEO1',
       name: '1 Cục Kẹo Ngọt 🍬',
       shortName: '1 CỤC KẸO',
       type: 'candy',
@@ -57,6 +44,7 @@
     },
     {
       id: 'lolli_1_a',
+      prizeKey: 'MUT1',
       name: '1 Cây Kẹo Mút 🍭',
       shortName: '1 KẸO MÚT',
       type: 'lollipop',
@@ -67,6 +55,7 @@
     },
     {
       id: 'candy_2_a',
+      prizeKey: 'KEO2',
       name: '2 Cục Kẹo Thơm 🍬🍬',
       shortName: '2 CỤC KẸO',
       type: 'candy',
@@ -76,17 +65,8 @@
       textColor: '#ffffff'
     },
     {
-      id: 'luck_2',
-      name: 'May Mắn Lần Sau 🍀',
-      shortName: 'MAY MẮN 🍀',
-      type: 'luck',
-      amount: 0,
-      desc: 'Chúc bạn 20/10 rực rỡ! Nhân phẩm hôm nay nhường lại cho bạn bên cạnh, nhưng sự xinh đẹp của bạn thì đạt điểm 10!',
-      color: '#a855f7',
-      textColor: '#ffffff'
-    },
-    {
       id: 'candy_1_b',
+      prizeKey: 'KEO1',
       name: '1 Cục Kẹo Dễ Thương 🍬',
       shortName: '1 CỤC KẸO',
       type: 'candy',
@@ -97,6 +77,7 @@
     },
     {
       id: 'lolli_1_b',
+      prizeKey: 'MUT1',
       name: '1 Cây Kẹo Mút Yêu Thương 🍭',
       shortName: '1 KẸO MÚT',
       type: 'lollipop',
@@ -107,6 +88,7 @@
     },
     {
       id: 'candy_2_b',
+      prizeKey: 'KEO2',
       name: '2 Cục Kẹo Năng Lượng 🍬🍬',
       shortName: '2 CỤC KẸO',
       type: 'candy',
@@ -116,33 +98,14 @@
       textColor: '#78350f'
     },
     {
-      id: 'luck_3',
-      name: 'May Mắn Lần Sau 🍀',
-      shortName: 'MAY MẮN 🍀',
-      type: 'luck',
-      amount: 0,
-      desc: 'Hôm nay may mắn tạm vắng, nhưng các bạn nam Tổ 2 sẵn sàng bao trà sữa/trực nhật giúp bạn 1 buổi nhé!',
-      color: '#9333ea',
-      textColor: '#ffffff'
-    },
-    {
       id: 'candy_1_c',
+      prizeKey: 'KEO1',
       name: '1 Cục Kẹo May Mắn 🍬',
       shortName: '1 CỤC KẸO',
       type: 'candy',
       amount: 1,
       desc: 'Giải Ba! May mắn gõ cửa với 1 viên kẹo ngọt ngào từ các bạn nam 10T1!',
       color: '#f43f5e',
-      textColor: '#ffffff'
-    },
-    {
-      id: 'candy_1_d',
-      name: '1 Cục Kẹo Tình Cảm 🍬',
-      shortName: '1 CỤC KẸO',
-      type: 'candy',
-      amount: 1,
-      desc: 'Giải Ba! Thêm 1 viên kẹo ngọt ngào chúc bạn nữ 10T1 luôn đáng yêu!',
-      color: '#e11d48',
       textColor: '#ffffff'
     }
   ];
@@ -155,6 +118,7 @@
   let isMusicPlaying = false;
   let audioContext = null;
   let pendingPlayMusic = false;
+  let currentPendingVerification = null;
 
   // DOM Elements
   const envelopeScreen = document.getElementById('envelopeScreen');
@@ -185,9 +149,6 @@
   const ticketPlayTime = document.getElementById('ticketPlayTime');
   const ticketDeviceShortId = document.getElementById('ticketDeviceShortId');
 
-  const displayLollipopStock = document.getElementById('displayLollipopStock');
-  const displayCandyStock = document.getElementById('displayCandyStock');
-
   // Admin Elements
   const openAdminModalBtn = document.getElementById('openAdminModalBtn');
   const footerAdminBtn = document.getElementById('footerAdminBtn');
@@ -205,6 +166,9 @@
   const verifyCodeInput = document.getElementById('verifyCodeInput');
   const btnVerifyCode = document.getElementById('btnVerifyCode');
   const verifyResultToast = document.getElementById('verifyResultToast');
+  const verifyActionBox = document.getElementById('verifyActionBox');
+  const verifyStudentNameInput = document.getElementById('verifyStudentNameInput');
+  const btnConfirmHandout = document.getElementById('btnConfirmHandout');
 
   const dashTotalPlayers = document.getElementById('dashTotalPlayers');
   const dashCandyWon = document.getElementById('dashCandyWon');
@@ -215,8 +179,27 @@
   const btnExportJSON = document.getElementById('btnExportJSON');
 
   // ===================================================================
-  // 1. INITIALIZATION & DEVICE FINGERPRINT
+  // 1. CRYPTOGRAPHIC SIGNATURE & VERIFICATION ENGINE (CROSS-DEVICE)
   // ===================================================================
+
+  // Computes a deterministic 4-character hex signature using ADMIN_PASSWORD as secret salt
+  function computeChecksum(prizeKey, seed) {
+    const str = ADMIN_PASSWORD + '_' + prizeKey + '_' + seed;
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = ((hash << 5) - hash) + str.charCodeAt(i);
+      hash |= 0;
+    }
+    return Math.abs(hash).toString(16).substring(0, 4).toUpperCase().padStart(4, '0');
+  }
+
+  // Generates a verifiable code: 10T1-[PRIZE]-[SEED2][SIG4]
+  // Example: 10T1-MUT2-8433CD
+  function generateSecureVoucher(prizeKey) {
+    const seed = Math.floor(10 + Math.random() * 89).toString(); // 2 digits
+    const sig = computeChecksum(prizeKey, seed); // 4 chars
+    return `10T1-${prizeKey}-${seed}${sig}`;
+  }
 
   function getOrCreateDeviceId() {
     let id = localStorage.getItem(STORAGE_KEY_DEVICE);
@@ -240,27 +223,21 @@
     localStorage.setItem(STORAGE_KEY_SUBMISSIONS, JSON.stringify(list));
   }
 
-  function getStock() {
+  function getAdminClaims() {
     try {
-      const data = localStorage.getItem(STORAGE_KEY_STOCK);
-      return data ? JSON.parse(data) : { ...DEFAULT_STOCK };
+      const data = localStorage.getItem(STORAGE_KEY_ADMIN_CLAIMS);
+      return data ? JSON.parse(data) : [];
     } catch (e) {
-      return { ...DEFAULT_STOCK };
+      return [];
     }
   }
 
-  function saveStock(stock) {
-    localStorage.setItem(STORAGE_KEY_STOCK, JSON.stringify(stock));
-  }
-
-  function updateStockDisplay() {
-    const stock = getStock();
-    if (displayLollipopStock) displayLollipopStock.textContent = Math.max(0, stock.lollipops);
-    if (displayCandyStock) displayCandyStock.textContent = Math.max(0, stock.candies);
+  function saveAdminClaims(list) {
+    localStorage.setItem(STORAGE_KEY_ADMIN_CLAIMS, JSON.stringify(list));
   }
 
   // ===================================================================
-  // 2. WEB AUDIO API SYNTHESIZER (TICK & FANFARE SOUNDS)
+  // 2. WEB AUDIO API SYNTHESIZER
   // ===================================================================
 
   function initAudioContext() {
@@ -275,15 +252,14 @@
     }
   }
 
-  // Realistic Wheel Ticker Sound
   function playTickSound() {
     if (!audioContext) return;
     try {
       const osc = audioContext.createOscillator();
       const gain = audioContext.createGain();
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(500, audioContext.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(120, audioContext.currentTime + 0.04);
+      osc.frequency.setValueAtTime(520, audioContext.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(130, audioContext.currentTime + 0.04);
 
       gain.gain.setValueAtTime(0.25, audioContext.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.04);
@@ -296,11 +272,10 @@
     } catch (e) {}
   }
 
-  // Celebratory Win Fanfare
   function playWinFanfare() {
     if (!audioContext) return;
     try {
-      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+      const notes = [523.25, 659.25, 783.99, 1046.50];
       notes.forEach((freq, index) => {
         const osc = audioContext.createOscillator();
         const gain = audioContext.createGain();
@@ -321,10 +296,9 @@
   }
 
   // ===================================================================
-  // 3. YOUTUBE PLAYER INTEGRATION (Bí Mật Nhạc Xổ Số: atq9S7pp1rQ)
+  // 3. YOUTUBE PLAYER INTEGRATION (Nhạc Xổ Số Bất Ngờ: atq9S7pp1rQ)
   // ===================================================================
 
-  // Load YouTube IFrame API script
   window.onYouTubeIframeAPIReady = function () {
     ytPlayer = new YT.Player('yt-player', {
       height: '1',
@@ -423,33 +397,29 @@
     initAudioContext();
     playLotteryMusic();
 
-    // Visual open effect
     if (envelopeWrapper) envelopeWrapper.classList.add('open');
 
-    // Confetti pop
     if (window.confetti) {
       window.confetti({
-        particleCount: 70,
-        spread: 80,
+        particleCount: 80,
+        spread: 85,
         origin: { y: 0.6 }
       });
     }
 
-    // Smooth transition to full page
     setTimeout(() => {
       if (envelopeScreen) envelopeScreen.classList.add('opened');
       if (mainContent) mainContent.classList.add('visible');
 
-      // Scroll smoothly to letter section
       const letterSec = document.getElementById('letterSection');
       if (letterSec) {
         letterSec.scrollIntoView({ behavior: 'smooth' });
       }
-    }, 1200);
+    }, 1100);
   }
 
   // ===================================================================
-  // 5. LUCKY WHEEL ENGINE (CANVAS & PHYSICS)
+  // 5. LUCKY WHEEL ENGINE (8 CẢNH KẸO - KHÔNG GIỚI HẠN)
   // ===================================================================
 
   function drawWheel() {
@@ -464,7 +434,7 @@
 
     wheelCtx.clearRect(0, 0, width, height);
 
-    // Draw Outer Rim with 3D ring
+    // Outer Rim with 3D ring
     wheelCtx.save();
     wheelCtx.translate(center, center);
 
@@ -478,7 +448,7 @@
     wheelCtx.fillStyle = outerGradient;
     wheelCtx.fill();
 
-    // Outer Rim Dots (Casino/Lottery Bulbs)
+    // Outer Rim Bulbs
     const numBulbs = 24;
     for (let i = 0; i < numBulbs; i++) {
       const bulbAngle = (i * 2 * Math.PI) / numBulbs;
@@ -494,7 +464,6 @@
       wheelCtx.shadowBlur = 0;
     }
 
-    // Rotate canvas for wheel spin
     wheelCtx.rotate(currentWheelRotation);
 
     // Draw Slices
@@ -503,7 +472,6 @@
       const endAngle = startAngle + sliceAngle;
       const sector = WHEEL_SECTORS[i];
 
-      // Slice Path
       wheelCtx.beginPath();
       wheelCtx.moveTo(0, 0);
       wheelCtx.arc(0, 0, radius, startAngle, endAngle);
@@ -512,22 +480,19 @@
       wheelCtx.fillStyle = sector.color;
       wheelCtx.fill();
 
-      // Border between slices
       wheelCtx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
       wheelCtx.lineWidth = 2;
       wheelCtx.stroke();
 
-      // Text inside Slice
       wheelCtx.save();
       wheelCtx.rotate(startAngle + sliceAngle / 2);
       wheelCtx.textAlign = 'right';
       wheelCtx.fillStyle = sector.textColor;
-      wheelCtx.font = 'bold 13px "Montserrat", sans-serif';
+      wheelCtx.font = 'bold 15px "Montserrat", sans-serif';
       wheelCtx.shadowColor = 'rgba(0, 0, 0, 0.3)';
       wheelCtx.shadowBlur = 3;
 
-      // Text and emoji
-      wheelCtx.fillText(sector.shortName, radius - 20, 5);
+      wheelCtx.fillText(sector.shortName, radius - 22, 5);
       wheelCtx.restore();
     }
 
@@ -537,16 +502,14 @@
   function spinWheel() {
     if (isSpinning) return;
 
-    // Check if already played
     if (hasDevicePlayed()) {
       showAlreadyPlayedAlert();
       return;
     }
 
-    // Validate Student Name
     const nameVal = studentNameInput ? studentNameInput.value.trim() : '';
     if (!nameVal) {
-      alert('Vui lòng nhập Họ và Tên bạn nữ 10T1 trước khi quay để hệ thống ghi nhận quà nhé!');
+      alert('Vui lòng nhập Họ và Tên bạn nữ 10T1 trước khi quay nhé!');
       if (studentNameInput) studentNameInput.focus();
       return;
     }
@@ -558,48 +521,20 @@
     initAudioContext();
     playLotteryMusic();
 
-    // Check available stock
-    const stock = getStock();
-    let eligibleIndices = [];
-
-    WHEEL_SECTORS.forEach((sec, index) => {
-      if (sec.type === 'luck') {
-        eligibleIndices.push(index);
-      } else if (sec.type === 'lollipop') {
-        if (stock.lollipops >= sec.amount) {
-          eligibleIndices.push(index);
-        }
-      } else if (sec.type === 'candy') {
-        if (stock.candies >= sec.amount) {
-          eligibleIndices.push(index);
-        }
-      }
-    });
-
-    // Fallback if low stock
-    if (eligibleIndices.length === 0) {
-      eligibleIndices = [1, 5, 9]; // fallback luck slices
-    }
-
-    // Pick random target index
-    const targetIndex = eligibleIndices[Math.floor(Math.random() * eligibleIndices.length)];
+    // Equal fair chance among all 8 candy slices (Không giới hạn quà!)
+    const targetIndex = Math.floor(Math.random() * WHEEL_SECTORS.length);
     const chosenSector = WHEEL_SECTORS[targetIndex];
 
-    // Compute target rotation
-    // Pointer is at the top (angle = -Math.PI / 2 or 3*PI/2)
     const numSlices = WHEEL_SECTORS.length;
     const sliceAngle = (2 * Math.PI) / numSlices;
-    
-    // In our coordinate system, pointer is at top (270 deg or 1.5 * PI)
     const targetSliceCenter = targetIndex * sliceAngle + sliceAngle / 2;
     const baseTargetAngle = (3 * Math.PI / 2) - targetSliceCenter;
-    
-    // Add multiple full spins (e.g. 6 to 9 full spins)
+
     const fullSpins = (6 + Math.floor(Math.random() * 3)) * (2 * Math.PI);
     const finalAngle = baseTargetAngle + fullSpins;
 
     const startTime = performance.now();
-    const duration = 6500; // 6.5s of suspense!
+    const duration = 6500;
     const startAngle = currentWheelRotation % (2 * Math.PI);
     const totalRotationToCover = finalAngle - startAngle;
 
@@ -608,14 +543,11 @@
     function animateSpin(currentTime) {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-
-      // Deceleration curve (easeOutCubic or easeOutQuart)
       const ease = 1 - Math.pow(1 - progress, 3.8);
 
       currentWheelRotation = startAngle + totalRotationToCover * ease;
       drawWheel();
 
-      // Tick sound check
       const currentSliceIndex = Math.floor(
         ((3 * Math.PI / 2 - (currentWheelRotation % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI)) / sliceAngle
       );
@@ -627,7 +559,6 @@
       if (progress < 1) {
         requestAnimationFrame(animateSpin);
       } else {
-        // Spin finished!
         isSpinning = false;
         handleSpinResult(nameVal, chosenSector);
       }
@@ -637,28 +568,16 @@
   }
 
   function handleSpinResult(studentName, sector) {
-    // 1. Deduct stock
-    const stock = getStock();
-    if (sector.type === 'lollipop') {
-      stock.lollipops = Math.max(0, stock.lollipops - sector.amount);
-    } else if (sector.type === 'candy') {
-      stock.candies = Math.max(0, stock.candies - sector.amount);
-    }
-    saveStock(stock);
-    updateStockDisplay();
-
-    // 2. Generate unique verification code
+    // Generate mathematically verifiable voucher code
     const deviceId = getOrCreateDeviceId();
-    const prefix = sector.type === 'lollipop' ? '10T1-MUT' : (sector.type === 'candy' ? '10T1-KEO' : '10T1-LUCK');
-    const randomHex = Math.random().toString(36).substring(2, 6).toUpperCase();
-    const verifyCode = `${prefix}-${sector.amount || 0}-${randomHex}`;
+    const verifyCode = generateSecureVoucher(sector.prizeKey);
 
     const now = new Date();
     const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')} ngày ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
 
-    // 3. Create Ticket Object
     const ticket = {
       name: studentName,
+      prizeKey: sector.prizeKey,
       prizeName: sector.name,
       prizeDesc: sector.desc,
       prizeType: sector.type,
@@ -669,41 +588,24 @@
       claimed: false
     };
 
-    // 4. Save to Submissions list and LocalStorage
+    // Save locally to lock this device
     const submissions = getSubmissions();
     submissions.unshift(ticket);
     saveSubmissions(submissions);
 
-    // Save single-device lock
     localStorage.setItem(STORAGE_KEY_PLAYED, 'true');
     localStorage.setItem(STORAGE_KEY_TICKET, JSON.stringify(ticket));
 
-    // 5. Celebration Effects
     playWinFanfare();
 
     if (window.confetti) {
-      window.confetti({
-        particleCount: 120,
-        spread: 100,
-        origin: { y: 0.5 }
-      });
+      window.confetti({ particleCount: 120, spread: 100, origin: { y: 0.5 } });
       setTimeout(() => {
-        window.confetti({
-          particleCount: 80,
-          angle: 60,
-          spread: 55,
-          origin: { x: 0 }
-        });
-        window.confetti({
-          particleCount: 80,
-          angle: 120,
-          spread: 55,
-          origin: { x: 1 }
-        });
+        window.confetti({ particleCount: 80, angle: 60, spread: 55, origin: { x: 0 } });
+        window.confetti({ particleCount: 80, angle: 120, spread: 55, origin: { x: 1 } });
       }, 400);
     }
 
-    // 6. Display Ticket
     setTimeout(() => {
       displayTicketView(ticket);
     }, 1000);
@@ -739,7 +641,6 @@
     if (ticketPlayTime) ticketPlayTime.textContent = ticket.timeString;
     if (ticketDeviceShortId) ticketDeviceShortId.textContent = `#${ticket.deviceId.split('-')[1] || 'DEV'}`;
 
-    // Scroll to ticket
     if (ticketResultArea) {
       ticketResultArea.scrollIntoView({ behavior: 'smooth' });
     }
@@ -755,21 +656,20 @@
   }
 
   function showAlreadyPlayedAlert() {
-    alert('Bạn đã hoàn thành lượt quay trên thiết bị này rồi nhé! Hãy xem phiếu trúng thưởng bên dưới để nhận kẹo từ bạn Sơn.');
+    alert('Bạn đã hoàn thành lượt quay trên thiết bị này rồi nhé! Hãy đưa mã trúng thưởng bên dưới cho bạn Sơn để nhận kẹo.');
     if (ticketResultArea) {
       ticketResultArea.scrollIntoView({ behavior: 'smooth' });
     }
   }
 
   // ===================================================================
-  // 7. ADMIN PORTAL (PASSWORD: Son2801@)
+  // 7. ADMIN PORTAL (CROSS-DEVICE VERIFICATION: Son2801@)
   // ===================================================================
 
   function openAdminModal() {
     if (adminModalBackdrop) {
       adminModalBackdrop.classList.add('active');
     }
-    // Default view is login unless already logged in this session
     if (sessionStorage.getItem('10t1_admin_logged') === 'true') {
       showAdminDashboard();
     } else {
@@ -796,7 +696,7 @@
   function showAdminDashboard() {
     if (adminViewLogin) adminViewLogin.style.display = 'none';
     if (adminViewDashboard) adminViewDashboard.style.display = 'block';
-    renderAdminStatsAndTable();
+    renderAdminDashboard();
   }
 
   function handleAdminLogin() {
@@ -819,48 +719,166 @@
     showAdminLogin();
   }
 
-  function renderAdminStatsAndTable() {
-    const list = getSubmissions();
-    const stock = getStock();
-
-    // Stats
-    const totalPlayers = list.length;
-    let candyWon = 0;
-    let lolliWon = 0;
-
-    list.forEach(item => {
-      if (item.prizeType === 'candy') candyWon += (item.prizeAmount || 1);
-      if (item.prizeType === 'lollipop') lolliWon += (item.prizeAmount || 1);
-    });
-
-    if (dashTotalPlayers) dashTotalPlayers.textContent = totalPlayers;
-    if (dashCandyWon) dashCandyWon.textContent = `${candyWon} / 5`;
-    if (dashLollipopWon) dashLollipopWon.textContent = `${lolliWon} / 3`;
-
-    // Claims Table
-    if (!claimsTableBody) return;
-    claimsTableBody.innerHTML = '';
-
-    if (list.length === 0) {
-      claimsTableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #888; padding: 20px;">Chưa có bạn nào quay thưởng. Dữ liệu sẽ xuất hiện khi có bạn nữ quay!</td></tr>`;
+  // CORE FIX: Cross-Device Mathematical Code Verifier
+  function verifyCodeQuickly() {
+    const input = verifyCodeInput ? verifyCodeInput.value.trim().toUpperCase() : '';
+    if (!input) {
+      showVerifyToast('Vui lòng nhập mã kiểm tra trên điện thoại của bạn nữ!', 'fail');
+      if (verifyActionBox) verifyActionBox.style.display = 'none';
       return;
     }
 
-    list.forEach((item, index) => {
+    // Match code format: 10T1-(MUT2|MUT1|KEO2|KEO1)-[SEED2][SIG4] or without 10T1-
+    const match = input.match(/(?:10T1-)?(MUT2|MUT1|KEO2|KEO1)-?([0-9A-Z]{6})/);
+
+    // Also check local submissions for backwards compatibility
+    const localList = getSubmissions();
+    const localFound = localList.find(item => item.verifyCode.toUpperCase() === input);
+
+    let prizeKey = '';
+    let token = '';
+    let prizeName = '';
+    let prizeType = '';
+    let prizeAmount = 1;
+
+    if (match) {
+      prizeKey = match[1];
+      token = match[2];
+      const seed = token.substring(0, 2);
+      const receivedSig = token.substring(2);
+      const expectedSig = computeChecksum(prizeKey, seed);
+
+      if (receivedSig !== expectedSig) {
+        showVerifyToast(`❌ MÃ KHÔNG HỢP LỆ! Mã "${input}" không đúng thuật toán bảo mật của 10T1 hoặc đã bị chỉnh sửa!`, 'fail');
+        if (verifyActionBox) verifyActionBox.style.display = 'none';
+        return;
+      }
+
+      const PRIZE_DETAILS = {
+        'MUT2': { name: '2 Cây Kẹo Mút 🍭🍭', amount: 2, type: 'lollipop' },
+        'MUT1': { name: '1 Cây Kẹo Mút 🍭', amount: 1, type: 'lollipop' },
+        'KEO2': { name: '2 Cục Kẹo Ngọt 🍬🍬', amount: 2, type: 'candy' },
+        'KEO1': { name: '1 Cục Kẹo Ngọt 🍬', amount: 1, type: 'candy' }
+      };
+
+      const p = PRIZE_DETAILS[prizeKey];
+      prizeName = p.name;
+      prizeType = p.type;
+      prizeAmount = p.amount;
+    } else if (localFound) {
+      prizeKey = localFound.prizeKey || 'KEO1';
+      token = localFound.verifyCode.split('-').pop();
+      prizeName = localFound.prizeName;
+      prizeType = localFound.prizeType;
+      prizeAmount = localFound.prizeAmount;
+    } else {
+      showVerifyToast(`❌ MÃ KHÔNG ĐÚNG ĐỊNH DẠNG! Mã chuẩn có dạng: 10T1-MUT2-XXXXXX hoặc 10T1-KEO2-XXXXXX`, 'fail');
+      if (verifyActionBox) verifyActionBox.style.display = 'none';
+      return;
+    }
+
+    const normalizedCode = `10T1-${prizeKey}-${token}`;
+
+    // Check if this code was already handed out on this admin device
+    const adminClaims = getAdminClaims();
+    const alreadyClaimed = adminClaims.find(item => item.code === normalizedCode);
+
+    if (alreadyClaimed) {
+      showVerifyToast(
+        `⚠️ CẢNH BÁO: Mã "${normalizedCode}" ĐÃ ĐƯỢC TRAO QUÀ trước đó cho bạn "${alreadyClaimed.name}" lúc ${alreadyClaimed.time}!\n(Hãy nhắc bạn nữ không nhận kẹo lần 2 nhé)`,
+        'warning'
+      );
+      if (verifyActionBox) verifyActionBox.style.display = 'none';
+      return;
+    }
+
+    // Set pending verification object
+    currentPendingVerification = {
+      code: normalizedCode,
+      prizeName: prizeName,
+      prizeType: prizeType,
+      prizeAmount: prizeAmount
+    };
+
+    showVerifyToast(
+      `✅ XÁC THỰC THÀNH CÔNG! Mã chính xác từ hệ thống 10T1.\n🎁 PHẦN THƯỞNG: ${prizeName}\n👉 Sơn hãy trao quà cho bạn nữ và bấm xác nhận bên dưới:`,
+      'success'
+    );
+
+    if (verifyActionBox) verifyActionBox.style.display = 'block';
+    if (verifyStudentNameInput) {
+      verifyStudentNameInput.value = localFound ? localFound.name : '';
+      verifyStudentNameInput.focus();
+    }
+  }
+
+  // Action: Sơn confirms handout
+  function confirmHandout() {
+    if (!currentPendingVerification) return;
+
+    const nameVal = verifyStudentNameInput ? verifyStudentNameInput.value.trim() : '';
+    const finalName = nameVal || 'Bạn Nữ 10T1';
+
+    const now = new Date();
+    const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')} ngày ${now.getDate()}/${now.getMonth() + 1}`;
+
+    const newClaim = {
+      code: currentPendingVerification.code,
+      name: finalName,
+      prizeName: currentPendingVerification.prizeName,
+      prizeType: currentPendingVerification.prizeType,
+      prizeAmount: currentPendingVerification.prizeAmount,
+      time: timeStr
+    };
+
+    const adminClaims = getAdminClaims();
+    adminClaims.unshift(newClaim);
+    saveAdminClaims(adminClaims);
+
+    currentPendingVerification = null;
+    if (verifyActionBox) verifyActionBox.style.display = 'none';
+    if (verifyCodeInput) verifyCodeInput.value = '';
+
+    showVerifyToast(`🎉 ĐÃ XÁC NHẬN TRAO ${newClaim.prizeName} CHO BẠN: "${finalName}"!`, 'success');
+    renderAdminDashboard();
+  }
+
+  function renderAdminDashboard() {
+    const adminClaims = getAdminClaims();
+
+    let totalCandy = 0;
+    let totalLollipop = 0;
+
+    adminClaims.forEach(item => {
+      if (item.prizeType === 'candy') totalCandy += (item.prizeAmount || 1);
+      if (item.prizeType === 'lollipop') totalLollipop += (item.prizeAmount || 1);
+    });
+
+    if (dashTotalPlayers) dashTotalPlayers.textContent = adminClaims.length;
+    if (dashCandyWon) dashCandyWon.textContent = `${totalCandy} 🍬`;
+    if (dashLollipopWon) dashLollipopWon.textContent = `${totalLollipop} 🍭`;
+
+    if (!claimsTableBody) return;
+    claimsTableBody.innerHTML = '';
+
+    if (adminClaims.length === 0) {
+      claimsTableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #888; padding: 20px;">Chưa có bạn nào được xác nhận trao quà. Hãy gõ mã từ điện thoại của bạn nữ vào ô trên để kiểm tra và trao quà!</td></tr>`;
+      return;
+    }
+
+    adminClaims.forEach((item, index) => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${index + 1}</td>
         <td><strong>${escapeHtml(item.name)}</strong></td>
         <td>${escapeHtml(item.prizeName)}</td>
-        <td><code>${escapeHtml(item.verifyCode)}</code></td>
-        <td style="font-size: 0.75rem;">${escapeHtml(item.timeString)}</td>
+        <td><code>${escapeHtml(item.code)}</code></td>
+        <td style="font-size: 0.75rem;">${escapeHtml(item.time)}</td>
         <td>
-          <button class="btn-toggle-claim ${item.claimed ? 'claimed' : 'pending'}" data-index="${index}">
-            ${item.claimed ? '<i class="fa-solid fa-check"></i> Đã trao quà' : '<i class="fa-solid fa-clock"></i> Chưa nhận'}
-          </button>
+          <span class="btn-toggle-claim claimed"><i class="fa-solid fa-circle-check"></i> Đã trao quà</span>
         </td>
         <td>
-          <button class="btn-tool danger" style="padding: 2px 8px; font-size: 0.72rem;" data-del-index="${index}" title="Xoá mục này">
+          <button class="btn-tool danger" style="padding: 2px 8px; font-size: 0.72rem;" data-del-claim="${index}" title="Xoá mục này">
             <i class="fa-solid fa-trash"></i>
           </button>
         </td>
@@ -868,63 +886,26 @@
       claimsTableBody.appendChild(tr);
     });
 
-    // Add listeners for claim toggle and delete
-    claimsTableBody.querySelectorAll('.btn-toggle-claim').forEach(btn => {
+    claimsTableBody.querySelectorAll('[data-del-claim]').forEach(btn => {
       btn.addEventListener('click', function () {
-        const idx = parseInt(this.getAttribute('data-index'), 10);
-        toggleClaimStatus(idx);
-      });
-    });
-
-    claimsTableBody.querySelectorAll('[data-del-index]').forEach(btn => {
-      btn.addEventListener('click', function () {
-        const idx = parseInt(this.getAttribute('data-del-index'), 10);
-        deleteSubmission(idx);
+        const idx = parseInt(this.getAttribute('data-del-claim'), 10);
+        deleteAdminClaim(idx);
       });
     });
   }
 
-  function toggleClaimStatus(index) {
-    const list = getSubmissions();
-    if (list[index]) {
-      list[index].claimed = !list[index].claimed;
-      saveSubmissions(list);
-      renderAdminStatsAndTable();
-    }
-  }
-
-  function deleteSubmission(index) {
-    if (confirm('Bạn có chắc muốn xoá thông tin quay này khỏi danh sách?')) {
-      const list = getSubmissions();
-      list.splice(index, 1);
-      saveSubmissions(list);
-      renderAdminStatsAndTable();
-    }
-  }
-
-  function verifyCodeQuickly() {
-    const code = verifyCodeInput ? verifyCodeInput.value.trim().toUpperCase() : '';
-    if (!code) {
-      showVerifyToast('Vui lòng nhập mã kiểm tra cần tra cứu!', 'fail');
-      return;
-    }
-
-    const list = getSubmissions();
-    const found = list.find(item => item.verifyCode.toUpperCase() === code);
-
-    if (found) {
-      showVerifyToast(
-        `✅ MÃ HỢP LỆ: ${found.name} trúng ${found.prizeName} (${found.claimed ? 'ĐÃ NHẬN' : 'CHƯA NHẬN'}) lúc ${found.timeString}`,
-        'success'
-      );
-    } else {
-      showVerifyToast(`❌ KHÔNG TÌM THẤY mã "${code}". Vui lòng kiểm tra lại thiết bị của bạn nữ!`, 'fail');
+  function deleteAdminClaim(index) {
+    if (confirm('Bạn có chắc muốn xoá mục này khỏi danh sách đã trao quà?')) {
+      const adminClaims = getAdminClaims();
+      adminClaims.splice(index, 1);
+      saveAdminClaims(adminClaims);
+      renderAdminDashboard();
     }
   }
 
   function showVerifyToast(msg, type) {
     if (!verifyResultToast) return;
-    verifyResultToast.textContent = msg;
+    verifyResultToast.innerHTML = msg.replace(/\n/g, '<br>');
     verifyResultToast.className = `verify-result-toast ${type}`;
     verifyResultToast.style.display = 'block';
   }
@@ -940,18 +921,18 @@
       if (btnSpinAction) btnSpinAction.disabled = false;
 
       closeAdminModal();
-      alert('Đã xoá lượt quay thành công! Bạn có thể thử nghiệm quay lại.');
+      alert('Đã xoá lượt quay của máy này! Bạn có thể thử nghiệm quay lại.');
     }
   }
 
   function resetAllData() {
-    if (confirm('CẢNH BÁO: Thao tác này sẽ xoá toàn bộ danh sách trúng thưởng và khôi phục số lượng kẹo ban đầu. Bạn có chắc chắn không?')) {
+    if (confirm('CẢNH BÁO: Thao tác này sẽ xoá toàn bộ danh sách đã trao quà và lượt quay. Bạn có chắc chắn không?')) {
       localStorage.removeItem(STORAGE_KEY_SUBMISSIONS);
       localStorage.removeItem(STORAGE_KEY_PLAYED);
       localStorage.removeItem(STORAGE_KEY_TICKET);
-      saveStock({ ...DEFAULT_STOCK });
-      updateStockDisplay();
-      renderAdminStatsAndTable();
+      localStorage.removeItem(STORAGE_KEY_ADMIN_CLAIMS);
+
+      renderAdminDashboard();
 
       if (gamePlayArea) gamePlayArea.style.display = 'flex';
       if (ticketResultArea) ticketResultArea.style.display = 'none';
@@ -961,13 +942,13 @@
   }
 
   function exportJSONData() {
-    const list = getSubmissions();
+    const list = getAdminClaims();
     const jsonStr = JSON.stringify(list, null, 2);
     const blob = new Blob([jsonStr], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `DanhSachTrungThuong_10T1_20-10_${Date.now()}.json`;
+    a.download = `DanhSachDaTraoQua_10T1_20-10_${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -980,7 +961,7 @@
   }
 
   // ===================================================================
-  // 8. FALLING PETALS CANVAS (CANVAS SAKURA / ROSE PETALS)
+  // 8. FALLING PETALS CANVAS
   // ===================================================================
 
   function initPetals() {
@@ -1051,7 +1032,6 @@
   // ===================================================================
 
   function setupEvents() {
-    // Open Envelope triggers
     if (waxSeal) waxSeal.addEventListener('click', openEnvelope);
     if (btnOpenEnvelopeAction) btnOpenEnvelopeAction.addEventListener('click', openEnvelope);
     if (envelopeWrapper) {
@@ -1060,7 +1040,6 @@
       });
     }
 
-    // Music controls
     if (musicPill) musicPill.addEventListener('click', toggleMusic);
     if (toggleMusicBtn) {
       toggleMusicBtn.addEventListener('click', function (e) {
@@ -1069,11 +1048,9 @@
       });
     }
 
-    // Spin Wheel triggers
     if (btnSpinWheel) btnSpinWheel.addEventListener('click', spinWheel);
     if (btnSpinAction) btnSpinAction.addEventListener('click', spinWheel);
 
-    // Clear input button
     if (btnClearName && studentNameInput) {
       btnClearName.addEventListener('click', () => {
         studentNameInput.value = '';
@@ -1081,7 +1058,6 @@
       });
     }
 
-    // Admin portal triggers
     if (openAdminModalBtn) openAdminModalBtn.addEventListener('click', openAdminModal);
     if (footerAdminBtn) footerAdminBtn.addEventListener('click', openAdminModal);
     if (closeAdminModalBtn) closeAdminModalBtn.addEventListener('click', closeAdminModal);
@@ -1091,7 +1067,6 @@
       });
     }
 
-    // Admin login form
     if (btnAdminLogin) btnAdminLogin.addEventListener('click', handleAdminLogin);
     if (adminPassInput) {
       adminPassInput.addEventListener('keydown', function (e) {
@@ -1099,7 +1074,6 @@
       });
     }
 
-    // Password Eye toggle
     if (btnToggleEye && adminPassInput && eyeIcon) {
       btnToggleEye.addEventListener('click', function () {
         if (adminPassInput.type === 'password') {
@@ -1112,14 +1086,22 @@
       });
     }
 
-    // Admin dashboard actions
     if (btnAdminLogout) btnAdminLogout.addEventListener('click', handleAdminLogout);
+
+    // Cross-Device Verification Actions
     if (btnVerifyCode) btnVerifyCode.addEventListener('click', verifyCodeQuickly);
     if (verifyCodeInput) {
       verifyCodeInput.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') verifyCodeQuickly();
       });
     }
+    if (btnConfirmHandout) btnConfirmHandout.addEventListener('click', confirmHandout);
+    if (verifyStudentNameInput) {
+      verifyStudentNameInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') confirmHandout();
+      });
+    }
+
     if (btnResetCurrentDevice) btnResetCurrentDevice.addEventListener('click', resetCurrentDevice);
     if (btnResetAllData) btnResetAllData.addEventListener('click', resetAllData);
     if (btnExportJSON) btnExportJSON.addEventListener('click', exportJSONData);
@@ -1134,10 +1116,8 @@
     loadYouTubeScript();
     initPetals();
     drawWheel();
-    updateStockDisplay();
     checkDeviceLockOnLoad();
     setupEvents();
   });
 
 })();
-

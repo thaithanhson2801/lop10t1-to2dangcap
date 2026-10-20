@@ -20,7 +20,7 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=2.2">
+  <link rel="stylesheet" href="css/style.css?v=2.5">
 </head>
 <body>
 
@@ -198,24 +198,27 @@
           </p>
         </div>
 
-        <!-- Remaining Stock Preview -->
+        <!-- Unlimited Stock Preview -->
         <div class="stock-showcase">
           <div class="stock-item">
             <div class="stock-icon lollipop-spin">🍭</div>
             <div class="stock-info">
-              <span class="stock-num" id="displayLollipopStock">3</span>
-              <span class="stock-label">Cây Kẹo Mút</span>
+              <span class="stock-num">KẸO MÚT</span>
+              <span class="stock-label">1 - 2 Cây / Suất</span>
             </div>
           </div>
           <div class="stock-divider"></div>
           <div class="stock-item">
             <div class="stock-icon candy-bounce">🍬</div>
             <div class="stock-info">
-              <span class="stock-num" id="displayCandyStock">5</span>
-              <span class="stock-label">Cục Kẹo Ngọt</span>
+              <span class="stock-num">KẸO NGỌT</span>
+              <span class="stock-label">1 - 2 Cục / Suất</span>
             </div>
           </div>
         </div>
+        <p class="unlimited-notice-banner">
+          <i class="fa-solid fa-gift"></i> <strong>Quà Tặng Không Giới Hạn:</strong> 100% các bạn nữ quay đều có kẹo — Bạn Sơn & Tổ 2 bao trọn gói cho toàn thể 10T1!
+        </p>
 
         <!-- MAIN GAME CONTAINER -->
         <div class="game-dashboard" id="gameDashboard">
@@ -346,7 +349,7 @@
             <div class="prize-emoji">🍭🍭</div>
             <h4 class="prize-title">2 Cây Kẹo Mút</h4>
             <p class="prize-desc">Dành cho cô gái có nhân phẩm tối thượng của 10T1 ngày hôm nay!</p>
-            <div class="prize-stock-tag">Số lượng: 1 suất</div>
+            <div class="prize-stock-tag">Không giới hạn (Sơn bao hết)</div>
           </div>
 
           <div class="prize-card">
@@ -354,7 +357,7 @@
             <div class="prize-emoji">🍭</div>
             <h4 class="prize-title">1 Cây Kẹo Mút</h4>
             <p class="prize-desc">Kẹo mút tròn vị ngọt lịm, ngậm là xinh gái nhân đôi!</p>
-            <div class="prize-stock-tag">Số lượng: 1 suất</div>
+            <div class="prize-stock-tag">Không giới hạn (Sơn bao hết)</div>
           </div>
 
           <div class="prize-card">
@@ -362,7 +365,7 @@
             <div class="prize-emoji">🍬🍬</div>
             <h4 class="prize-title">2 Cục Kẹo Thơm</h4>
             <p class="prize-desc">Nhân đôi vị ngọt, tràn ngập may mắn và năng lượng học tập!</p>
-            <div class="prize-stock-tag">Số lượng: 2 suất</div>
+            <div class="prize-stock-tag">Không giới hạn (Sơn bao hết)</div>
           </div>
 
           <div class="prize-card">
@@ -370,15 +373,7 @@
             <div class="prize-emoji">🍬</div>
             <h4 class="prize-title">1 Cục Kẹo Ngọt</h4>
             <p class="prize-desc">Món quà nhỏ xinh gửi gắm trọn vẹn tình cảm của Tổ 2!</p>
-            <div class="prize-stock-tag">Số lượng: 1 suất</div>
-          </div>
-
-          <div class="prize-card">
-            <div class="prize-badge-rank rank-luck">CỔ VŨ 20/10</div>
-            <div class="prize-emoji">🍀</div>
-            <h4 class="prize-title">May Mắn Lần Sau</h4>
-            <p class="prize-desc">Nhận tràng pháo tay siêu to & lời chúc 20/10 rực rỡ từ nam sinh 10T1!</p>
-            <div class="prize-stock-tag">3 ô may mắn trên vòng quay</div>
+            <div class="prize-stock-tag">Không giới hạn (Sơn bao hết)</div>
           </div>
 
         </div>
@@ -486,29 +481,40 @@
           <button class="btn-logout" id="btnAdminLogout" title="Đăng xuất"><i class="fa-solid fa-arrow-right-from-bracket"></i> Thoát</button>
         </div>
 
-        <!-- Quick Code Verifier Bar -->
+        <!-- Quick Code Verifier Bar (Hệ thống xác thực mã chéo liên thiết bị) -->
         <div class="verify-quick-tool">
-          <label><i class="fa-solid fa-qrcode"></i> Tra cứu nhanh mã trúng thưởng:</label>
+          <label><i class="fa-solid fa-qrcode"></i> Tra cứu & Xác thực mã từ điện thoại bạn nữ (Bất kỳ máy nào):</label>
           <div class="verify-input-row">
-            <input type="text" id="verifyCodeInput" placeholder="Nhập mã ví dụ: 10T1-KEO2-..." maxlength="30">
-            <button class="btn-verify-action" id="btnVerifyCode"><i class="fa-solid fa-magnifying-glass"></i> Kiểm Tra</button>
+            <input type="text" id="verifyCodeInput" placeholder="Gõ mã ví dụ: 10T1-MUT2-8433CD hoặc MUT2-8433CD..." maxlength="30" autocomplete="off">
+            <button class="btn-verify-action" id="btnVerifyCode"><i class="fa-solid fa-magnifying-glass"></i> Kiểm Tra Ngay</button>
           </div>
+          <!-- Verification Result Card -->
           <div class="verify-result-toast" id="verifyResultToast" style="display: none;"></div>
+
+          <!-- Action Confirm Handout -->
+          <div class="verify-action-box" id="verifyActionBox" style="display: none;">
+            <div class="verify-action-inputs">
+              <input type="text" id="verifyStudentNameInput" placeholder="Tên bạn nữ nhận kẹo (ví dụ: Phương Linh)..." maxlength="35">
+              <button type="button" class="btn-confirm-handout" id="btnConfirmHandout">
+                <i class="fa-solid fa-circle-check"></i> XÁC NHẬN ĐÃ TRAO QUÀ
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- Statistics Badges -->
         <div class="dash-stats-row">
           <div class="stat-box">
-            <span class="stat-title">Số Bạn Đã Quay</span>
+            <span class="stat-title">Tổng Bạn Đã Nhận Quà</span>
             <span class="stat-number" id="dashTotalPlayers">0</span>
           </div>
           <div class="stat-box">
-            <span class="stat-title">Kẹo Ngọt Đã Trúng</span>
-            <span class="stat-number" id="dashCandyWon">0 / 5</span>
+            <span class="stat-title">Kẹo Ngọt Đã Trao</span>
+            <span class="stat-number" id="dashCandyWon">0 🍬</span>
           </div>
           <div class="stat-box">
-            <span class="stat-title">Kẹo Mút Đã Trúng</span>
-            <span class="stat-number" id="dashLollipopWon">0 / 3</span>
+            <span class="stat-title">Kẹo Mút Đã Trao</span>
+            <span class="stat-number" id="dashLollipopWon">0 🍭</span>
           </div>
         </div>
 
@@ -554,7 +560,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/script.js"></script>
+  <script src="js/script.js?v=2.5"></script>
 </body>
 </html>
 

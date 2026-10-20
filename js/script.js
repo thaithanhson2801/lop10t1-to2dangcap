@@ -23,8 +23,7 @@
     lollipops: 3   // Kẹo mút
   };
 
-  // Wheel Sectors Definition
-  // Each prize corresponds to user's stock: 2 cục kẹo, 1 cục kẹo, 2 cục kẹo mút (or 1 kẹo mút)
+  // Wheel Sectors Definition (Bao gồm 3 ô May Mắn Lần Sau theo yêu cầu)
   const WHEEL_SECTORS = [
     {
       id: 'lolli_2',
@@ -34,6 +33,16 @@
       amount: 2,
       desc: 'Giải Đặc Biệt! Bạn nhận được 2 cây kẹo mút siêu ngọt ngào từ Tổ 2!',
       color: '#e11d48',
+      textColor: '#ffffff'
+    },
+    {
+      id: 'luck_1',
+      name: 'May Mắn Lần Sau 🍀',
+      shortName: 'MAY MẮN 🍀',
+      type: 'luck',
+      amount: 0,
+      desc: 'Tuy chưa trúng kẹo nhưng nụ cười của bạn là món quà đẹp nhất! Nhận ngay 1 tràng pháo tay siêu to từ Tổ 2 nhé!',
+      color: '#8b5cf6',
       textColor: '#ffffff'
     },
     {
@@ -67,6 +76,16 @@
       textColor: '#ffffff'
     },
     {
+      id: 'luck_2',
+      name: 'May Mắn Lần Sau 🍀',
+      shortName: 'MAY MẮN 🍀',
+      type: 'luck',
+      amount: 0,
+      desc: 'Chúc bạn 20/10 rực rỡ! Nhân phẩm hôm nay nhường lại cho bạn bên cạnh, nhưng sự xinh đẹp của bạn thì đạt điểm 10!',
+      color: '#a855f7',
+      textColor: '#ffffff'
+    },
+    {
       id: 'candy_1_b',
       name: '1 Cục Kẹo Dễ Thương 🍬',
       shortName: '1 CỤC KẸO',
@@ -97,6 +116,16 @@
       textColor: '#78350f'
     },
     {
+      id: 'luck_3',
+      name: 'May Mắn Lần Sau 🍀',
+      shortName: 'MAY MẮN 🍀',
+      type: 'luck',
+      amount: 0,
+      desc: 'Hôm nay may mắn tạm vắng, nhưng các bạn nam Tổ 2 sẵn sàng bao trà sữa/trực nhật giúp bạn 1 buổi nhé!',
+      color: '#9333ea',
+      textColor: '#ffffff'
+    },
+    {
       id: 'candy_1_c',
       name: '1 Cục Kẹo May Mắn 🍬',
       shortName: '1 CỤC KẸO',
@@ -104,6 +133,16 @@
       amount: 1,
       desc: 'Giải Ba! May mắn gõ cửa với 1 viên kẹo ngọt ngào từ các bạn nam 10T1!',
       color: '#f43f5e',
+      textColor: '#ffffff'
+    },
+    {
+      id: 'candy_1_d',
+      name: '1 Cục Kẹo Tình Cảm 🍬',
+      shortName: '1 CỤC KẸO',
+      type: 'candy',
+      amount: 1,
+      desc: 'Giải Ba! Thêm 1 viên kẹo ngọt ngào chúc bạn nữ 10T1 luôn đáng yêu!',
+      color: '#e11d48',
       textColor: '#ffffff'
     }
   ];
@@ -483,12 +522,12 @@
       wheelCtx.rotate(startAngle + sliceAngle / 2);
       wheelCtx.textAlign = 'right';
       wheelCtx.fillStyle = sector.textColor;
-      wheelCtx.font = 'bold 15px "Montserrat", sans-serif';
+      wheelCtx.font = 'bold 13px "Montserrat", sans-serif';
       wheelCtx.shadowColor = 'rgba(0, 0, 0, 0.3)';
       wheelCtx.shadowBlur = 3;
 
       // Text and emoji
-      wheelCtx.fillText(sector.shortName, radius - 24, 5);
+      wheelCtx.fillText(sector.shortName, radius - 20, 5);
       wheelCtx.restore();
     }
 
@@ -524,7 +563,9 @@
     let eligibleIndices = [];
 
     WHEEL_SECTORS.forEach((sec, index) => {
-      if (sec.type === 'lollipop') {
+      if (sec.type === 'luck') {
+        eligibleIndices.push(index);
+      } else if (sec.type === 'lollipop') {
         if (stock.lollipops >= sec.amount) {
           eligibleIndices.push(index);
         }
@@ -537,7 +578,7 @@
 
     // Fallback if low stock
     if (eligibleIndices.length === 0) {
-      eligibleIndices = [1, 4, 7]; // fallback candy slices
+      eligibleIndices = [1, 5, 9]; // fallback luck slices
     }
 
     // Pick random target index
@@ -608,9 +649,9 @@
 
     // 2. Generate unique verification code
     const deviceId = getOrCreateDeviceId();
-    const prefix = sector.type === 'lollipop' ? '10T1-MUT' : '10T1-KEO';
+    const prefix = sector.type === 'lollipop' ? '10T1-MUT' : (sector.type === 'candy' ? '10T1-KEO' : '10T1-LUCK');
     const randomHex = Math.random().toString(36).substring(2, 6).toUpperCase();
-    const verifyCode = `${prefix}-${sector.amount}-${randomHex}`;
+    const verifyCode = `${prefix}-${sector.amount || 0}-${randomHex}`;
 
     const now = new Date();
     const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')} ngày ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;

@@ -20,7 +20,7 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2.2">
 </head>
 <body>
 
@@ -59,30 +59,36 @@
       <p class="envelope-subtitle">Gửi gắm từ tất cả các chàng trai Tổ 2 & Nam sinh 10T1 đẳng cấp</p>
     </div>
 
-    <!-- The 3D Interactive Envelope -->
+    <!-- The Pure Sealed Envelope (Giao diện chuẩn phong bì nguyên bản) -->
     <div class="envelope-wrapper" id="envelopeWrapper">
-      <div class="envelope-card">
-        <!-- The Letter Inside (Trồi lên khi mở) -->
-        <div class="envelope-letter" id="envelopeLetter">
-          <div class="letter-stamp">
-            <i class="fa-solid fa-heart"></i>
-          </div>
-          <h3 class="letter-intro-heading">Gửi Các Bạn Nữ 10T1 Xinh Đẹp ✨</h3>
-          <p class="letter-intro-snippet">
-            Nhân ngày 20/10, chúc phái đẹp của lớp mình luôn luôn rạng rỡ, nụ cười luôn nở trên môi, bài kiểm tra luôn 9, 10...
-          </p>
-          <div class="letter-open-prompt">
-            <i class="fa-solid fa-heart-pulse"></i> Đang mở bức thư tình cảm... ✨
+      <div class="envelope-card" id="envelopeCard">
+        
+        <!-- Outside Postal Elements (Chi tiết mặt ngoài phong bì) -->
+        <div class="envelope-stamp-badge">
+          <span class="stamp-icon">🌹</span>
+          <div class="stamp-text-wrap">
+            <span class="stamp-title">10T1</span>
+            <span class="stamp-sub">20/10</span>
           </div>
         </div>
 
-        <!-- Pocket Base (Túi đựng che kín thư trước khi mở) -->
-        <div class="envelope-pocket"></div>
+        <div class="envelope-address-label">
+          <div class="address-to">
+            <span class="label-tag">Kính gửi:</span>
+            <span class="label-name">Các Bạn Nữ Lớp 10T1 Xinh Đẹp 💐</span>
+          </div>
+          <div class="address-from">
+            <span class="label-tag">Người gửi:</span>
+            <span class="label-team">Tập Thể Nam Sinh Tổ 2 Đẳng Cấp</span>
+          </div>
+        </div>
+
+        <div class="envelope-bottom-crease"></div>
 
         <!-- Envelope Flap (Nắp phong bì gập xuống) -->
         <div class="envelope-flap" id="envelopeFlap"></div>
         
-        <!-- Wax Seal (Con dấu sáp tròn) -->
+        <!-- Wax Seal (Con dấu sáp tròn ở giữa) -->
         <div class="wax-seal" id="waxSeal" title="Nhấn vào đây để mở thư!">
           <div class="seal-inner">
             <span class="seal-text">10T1</span>
@@ -90,6 +96,21 @@
           </div>
           <div class="pulse-ring"></div>
         </div>
+
+        <!-- The Letter Card (Chỉ mở ra và hiện khi bấm) -->
+        <div class="envelope-letter" id="envelopeLetter">
+          <div class="letter-stamp">
+            <i class="fa-solid fa-heart"></i>
+          </div>
+          <h3 class="letter-intro-heading">Gửi Các Bạn Nữ 10T1 Thân Yêu ✨</h3>
+          <p class="letter-intro-snippet">
+            Bức thư tình cảm & chương trình 20/10 đang mở ra...
+          </p>
+          <div class="letter-open-prompt">
+            <i class="fa-solid fa-sparkles"></i> Đón nhận món quà bất ngờ...
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -350,6 +371,14 @@
             <h4 class="prize-title">1 Cục Kẹo Ngọt</h4>
             <p class="prize-desc">Món quà nhỏ xinh gửi gắm trọn vẹn tình cảm của Tổ 2!</p>
             <div class="prize-stock-tag">Số lượng: 1 suất</div>
+          </div>
+
+          <div class="prize-card">
+            <div class="prize-badge-rank rank-luck">CỔ VŨ 20/10</div>
+            <div class="prize-emoji">🍀</div>
+            <h4 class="prize-title">May Mắn Lần Sau</h4>
+            <p class="prize-desc">Nhận tràng pháo tay siêu to & lời chúc 20/10 rực rỡ từ nam sinh 10T1!</p>
+            <div class="prize-stock-tag">3 ô may mắn trên vòng quay</div>
           </div>
 
         </div>

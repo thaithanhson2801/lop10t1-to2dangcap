@@ -229,9 +229,8 @@ body {
 
 /* The Envelope Container */
 .envelope-wrapper {
-  perspective: 1200px;
   width: min(92vw, 440px);
-  height: 280px;
+  min-height: 270px;
   position: relative;
   margin: 10px 0 24px;
 }
@@ -239,84 +238,135 @@ body {
 .envelope-card {
   position: relative;
   width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #be123c 100%);
-  border-radius: 18px;
-  box-shadow: 0 25px 60px rgba(190, 18, 60, 0.32), 0 5px 15px rgba(0, 0, 0, 0.08);
+  height: 270px;
+  background: linear-gradient(135deg, #fff0f3 0%, #fce7eb 50%, #fbcfe8 100%);
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(190, 18, 60, 0.25), 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 2px solid rgba(244, 63, 94, 0.35);
   cursor: pointer;
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  padding: 24px 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: visible;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 
 .envelope-card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 30px 70px rgba(190, 18, 60, 0.4);
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 30px 70px rgba(190, 18, 60, 0.35);
 }
 
-/* Pocket Fold Effects - Opaque, Completely Hiding the Letter */
-.envelope-pocket {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 18px;
-  overflow: hidden;
-  z-index: 3;
-  pointer-events: none;
-}
-
-.envelope-pocket::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(150deg, #fb7185 0%, #f43f5e 45%, #e11d48 100%);
-  clip-path: polygon(0% 38%, 50% 68%, 100% 38%, 100% 100%, 0% 100%);
-  box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.35);
-}
-
-.envelope-pocket::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to top, rgba(136, 19, 55, 0.3) 0%, transparent 60%);
-  clip-path: polygon(0% 38%, 50% 68%, 100% 38%, 100% 100%, 0% 100%);
-}
-
-/* Envelope Flap (Top Triangular Fold) */
-.envelope-flap {
+/* Subtle Watermark Texture */
+.envelope-bottom-crease {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(180deg, #f43f5e 0%, #fb7185 80%, #fda4af 100%);
-  clip-path: polygon(0% 0%, 100% 0%, 50% 68%);
-  transform-origin: top center;
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s 0.3s;
-  z-index: 4;
-  border-radius: 18px 18px 0 0;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.16));
+  border-radius: 18px;
+  background-image: 
+    linear-gradient(45deg, rgba(244, 63, 94, 0.035) 25%, transparent 25%), 
+    linear-gradient(-45deg, rgba(244, 63, 94, 0.035) 25%, transparent 25%);
+  background-size: 24px 24px;
+  pointer-events: none;
 }
 
-.envelope-wrapper.open .envelope-flap {
-  transform: rotateX(180deg);
-  z-index: 1;
+/* Vintage Postage Stamp (Góc trên phải phong bì) */
+.envelope-stamp-badge {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 64px;
+  height: 74px;
+  background: #ffffff;
+  border: 2px dashed #e11d48;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(190, 18, 60, 0.15);
+  transform: rotate(3deg);
+  z-index: 3;
 }
 
-/* Wax Seal Button */
+.stamp-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.stamp-text-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.1;
+}
+
+.stamp-title {
+  font-weight: 800;
+  font-size: 0.72rem;
+  color: var(--primary-dark);
+}
+
+.stamp-sub {
+  font-weight: 700;
+  font-size: 0.62rem;
+  color: #888;
+}
+
+/* Address Label in the center/left */
+.envelope-address-label {
+  position: relative;
+  z-index: 2;
+  margin-top: 6px;
+  max-width: 290px;
+}
+
+.address-to {
+  margin-bottom: 14px;
+}
+
+.label-tag {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #9f1239;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.label-name {
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 2.6vw, 1.38rem);
+  font-weight: 800;
+  color: #881337;
+  display: block;
+  margin-top: 3px;
+  line-height: 1.3;
+}
+
+.address-from {
+  border-top: 1px dashed rgba(244, 63, 94, 0.28);
+  padding-top: 10px;
+}
+
+.label-team {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #4b5563;
+  display: block;
+  margin-top: 2px;
+}
+
+/* Wax Seal Button (Nổi bật góc dưới phải) */
 .wax-seal {
   position: absolute;
-  top: 67%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 74px;
-  height: 74px;
+  bottom: 20px;
+  right: 22px;
+  width: 76px;
+  height: 76px;
   background: radial-gradient(circle at 35% 35%, #e11d48, #881337);
   border-radius: 50%;
   box-shadow: 0 10px 25px rgba(136, 19, 55, 0.55), inset 0 2px 4px rgba(255, 255, 255, 0.45);
@@ -329,11 +379,11 @@ body {
 }
 
 .envelope-card:hover .wax-seal {
-  transform: translate(-50%, -50%) scale(1.08);
+  transform: scale(1.08);
 }
 
 .envelope-wrapper.open .wax-seal {
-  transform: translate(-50%, -50%) scale(0);
+  transform: scale(0);
   opacity: 0;
 }
 
@@ -343,8 +393,8 @@ body {
   align-items: center;
   justify-content: center;
   border: 1.5px dashed rgba(254, 205, 211, 0.85);
-  width: 58px;
-  height: 58px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
 }
 
@@ -377,34 +427,70 @@ body {
   100% { transform: scale(1.5); opacity: 0; }
 }
 
-/* The Letter Emerging from Envelope */
+/* The Letter Emerging ONLY when Opened (Hoàn toàn ẩn khi đóng) */
 .envelope-letter {
+  display: none;
   position: absolute;
-  top: 15px;
-  left: 6%;
-  width: 88%;
-  height: 245px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-  padding: 22px 18px;
-  z-index: 2;
-  opacity: 0;
-  transform: translateY(15px) scale(0.96);
-  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s, opacity 0.4s ease 0.25s, z-index 0.1s 0.3s;
-  display: flex;
+  border-radius: 18px;
+  z-index: 10;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
-  border: 1.5px solid rgba(244, 63, 94, 0.2);
-  pointer-events: none;
+  padding: 24px;
+  box-shadow: 0 15px 40px rgba(190, 18, 60, 0.28);
+  border: 2px solid var(--primary-light);
 }
 
 .envelope-wrapper.open .envelope-letter {
-  opacity: 1;
-  transform: translateY(-135px) scale(1.02);
-  z-index: 6;
-  pointer-events: auto;
+  display: flex;
+  animation: letterUnfold 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes letterUnfold {
+  0% { transform: translateY(30px) scale(0.92); opacity: 0; }
+  100% { transform: translateY(-30px) scale(1.02); opacity: 1; }
+}
+
+.letter-stamp {
+  width: 36px;
+  height: 36px;
+  background: rgba(244, 63, 94, 0.1);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--primary);
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.letter-intro-heading {
+  font-family: var(--font-serif);
+  color: var(--primary-dark);
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  font-weight: 800;
+}
+
+.letter-intro-snippet {
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.letter-open-prompt {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .letter-stamp {
@@ -1232,6 +1318,7 @@ body {
 .prize-badge-rank.rank-1 { background: #fee2e2; color: #991b1b; }
 .prize-badge-rank.rank-2 { background: #e0e7ff; color: #3730a3; }
 .prize-badge-rank.rank-3 { background: #f3f4f6; color: #374151; }
+.prize-badge-rank.rank-luck { background: #ede9fe; color: #6d28d9; }
 
 .prize-emoji {
   font-size: 2.6rem;

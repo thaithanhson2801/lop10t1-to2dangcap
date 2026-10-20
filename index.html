@@ -33,11 +33,11 @@
   </div>
 
   <!-- Music Floating Controller -->
-  <div class="music-pill" id="musicPill" title="Bật / Tắt Nhạc Xổ Số & 20/10">
+  <div class="music-pill" id="musicPill" title="Bật / Tắt Giai Điệu 20/10">
     <div class="music-wave" id="musicWave">
       <span></span><span></span><span></span><span></span>
     </div>
-    <span class="music-text" id="musicStatusText">Nhạc Xổ Số: Đang Tắt</span>
+    <span class="music-text" id="musicStatusText">Giai Điệu: Đang Tắt</span>
     <button class="music-btn" id="toggleMusicBtn">
       <i class="fa-solid fa-play" id="musicIcon"></i>
     </button>
@@ -62,21 +62,6 @@
     <!-- The 3D Interactive Envelope -->
     <div class="envelope-wrapper" id="envelopeWrapper">
       <div class="envelope-card">
-        <!-- Envelope Flap (Nắp phong bì) -->
-        <div class="envelope-flap" id="envelopeFlap"></div>
-        
-        <!-- Pocket Base (Túi đựng) -->
-        <div class="envelope-pocket"></div>
-        
-        <!-- Wax Seal (Con dấu sáp tròn) -->
-        <div class="wax-seal" id="waxSeal" title="Nhấn vào đây để mở thư!">
-          <div class="seal-inner">
-            <span class="seal-text">10T1</span>
-            <span class="seal-sub">20/10</span>
-          </div>
-          <div class="pulse-ring"></div>
-        </div>
-
         <!-- The Letter Inside (Trồi lên khi mở) -->
         <div class="envelope-letter" id="envelopeLetter">
           <div class="letter-stamp">
@@ -87,18 +72,33 @@
             Nhân ngày 20/10, chúc phái đẹp của lớp mình luôn luôn rạng rỡ, nụ cười luôn nở trên môi, bài kiểm tra luôn 9, 10...
           </p>
           <div class="letter-open-prompt">
-            <i class="fa-solid fa-envelope-open-text"></i> Đang mở thư & bật nhạc xổ số...
+            <i class="fa-solid fa-heart-pulse"></i> Đang mở bức thư tình cảm... ✨
           </div>
+        </div>
+
+        <!-- Pocket Base (Túi đựng che kín thư trước khi mở) -->
+        <div class="envelope-pocket"></div>
+
+        <!-- Envelope Flap (Nắp phong bì gập xuống) -->
+        <div class="envelope-flap" id="envelopeFlap"></div>
+        
+        <!-- Wax Seal (Con dấu sáp tròn) -->
+        <div class="wax-seal" id="waxSeal" title="Nhấn vào đây để mở thư!">
+          <div class="seal-inner">
+            <span class="seal-text">10T1</span>
+            <span class="seal-sub">20/10</span>
+          </div>
+          <div class="pulse-ring"></div>
         </div>
       </div>
     </div>
 
     <div class="envelope-click-guide">
       <button class="btn-open-envelope" id="btnOpenEnvelopeAction">
-        <i class="fa-solid fa-gift pulse-icon"></i>
-        <span>CHẠM ĐỂ MỞ BỨC THƯ & BẬT NHẠC XỔ SỐ</span>
+        <i class="fa-solid fa-envelope-open-text pulse-icon"></i>
+        <span>CHẠM ĐỂ MỞ BỨC THƯ BÍ MẬT 💌</span>
       </button>
-      <p class="guide-note"><i class="fa-solid fa-circle-info"></i> Hãy nhớ bật âm lượng để nghe điệu nhạc xổ số huyền thoại nhé!</p>
+      <p class="guide-note"><i class="fa-solid fa-volume-high"></i> Hãy bật âm lượng điện thoại/máy tính lên để đón nhận điều bất ngờ nhé! 🎧✨</p>
     </div>
   </div>
 
@@ -239,7 +239,7 @@
 
             <div class="spin-controls">
               <button class="btn-spin-action" id="btnSpinAction">
-                <i class="fa-solid fa-dice-d20"></i> BẬT NHẠC VÀ QUAY NGAY!
+                <i class="fa-solid fa-dice-d20"></i> QUAY XỔ SỐ NHẬN QUÀ NGAY!
               </button>
             </div>
           </div>
@@ -528,3 +528,4 @@
   <script src="js/script.js"></script>
 </body>
 </html>
+

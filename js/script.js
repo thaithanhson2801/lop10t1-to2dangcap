@@ -115,6 +115,7 @@
   let ytPlayer = null;
   let isMusicPlaying = false;
   let audioContext = null;
+  let pendingPlayMusic = false;
 
   // DOM Elements
   const envelopeScreen = document.getElementById('envelopeScreen');
@@ -281,7 +282,7 @@
   }
 
   // ===================================================================
-  // 3. YOUTUBE PLAYER INTEGRATION (Nhạc Xổ Số: atq9S7pp1rQ)
+  // 3. YOUTUBE PLAYER INTEGRATION (Bí Mật Nhạc Xổ Số: atq9S7pp1rQ)
   // ===================================================================
 
   // Load YouTube IFrame API script
@@ -299,7 +300,12 @@
       },
       events: {
         onReady: function () {
-          // Ready for control
+          if (pendingPlayMusic) {
+            try {
+              ytPlayer.playVideo();
+              setMusicPlayingState(true);
+            } catch (e) {}
+          }
         },
         onStateChange: function (event) {
           if (event.data === YT.PlayerState.PLAYING) {
@@ -323,6 +329,7 @@
 
   function playLotteryMusic() {
     initAudioContext();
+    pendingPlayMusic = true;
     if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
       try {
         ytPlayer.playVideo();
@@ -332,6 +339,7 @@
   }
 
   function pauseLotteryMusic() {
+    pendingPlayMusic = false;
     if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
       try {
         ytPlayer.pauseVideo();
@@ -347,13 +355,13 @@
       if (musicIcon) {
         musicIcon.className = 'fa-solid fa-pause';
       }
-      if (musicStatusText) musicStatusText.textContent = 'Nhạc Xổ Số: Đang Phát 🎵';
+      if (musicStatusText) musicStatusText.textContent = 'Giai Điệu Bí Mật: Đang Phát 🎵';
     } else {
       if (musicWave) musicWave.classList.remove('playing');
       if (musicIcon) {
         musicIcon.className = 'fa-solid fa-play';
       }
-      if (musicStatusText) musicStatusText.textContent = 'Nhạc Xổ Số: Tạm Dừng';
+      if (musicStatusText) musicStatusText.textContent = 'Giai Điệu: Tạm Dừng';
     }
   }
 
@@ -1091,3 +1099,4 @@
   });
 
 })();
+
